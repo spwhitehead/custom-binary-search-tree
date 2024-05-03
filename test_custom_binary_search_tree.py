@@ -58,19 +58,42 @@ def test_find_max(tree: BST):
 
 def test_height(tree: BST):
     """returns the depth of the tree(how far is the furthest node from the root node?)"""
-    pass
+    expected = 4
+    actual = tree.height()
+    assert tree.root is not None, "root not none"
+    assert expected == actual
 
 
 def test_count_leaves(tree: BST):
     """returns the number of leaf nodes in the tree(leaf nodes are nodes without any children)"""
-    pass
+    expected = 1
+    actual = tree.count_leaves()
+    print(tree)
+    assert expected == actual
 
 
 def test_serialize(tree: BST):
     """turn the BST into a string"""
-    pass
+    expected = "2\xa03\xa09\xa06"
+    actual = tree.serialize()
+    assert expected == actual
 
 
-def test_deserialize(tree: BST):
+def test_deserialize():
     """deserialize a serialized BST(take a string version of a BST and make an empty BST filled with those values). The new tree should match the tree that was serialized."""
-    pass
+    tree = BST()
+    nums = "2\xa03\xa09\xa06"
+    tree.insert(2)
+    tree.insert(3)
+    tree.insert(9)
+    tree.insert(6)
+    tree.deserialize(nums)
+    assert tree.root.value == 2
+    assert tree.root.left == None
+    assert tree.root.right.value == 3
+    assert tree.root.right.left == None
+    assert tree.root.right.right.value == 9
+    assert tree.root.right.right.right == None
+    assert tree.root.right.right.left.value == 6
+    assert tree.root.right.right.left.left == None
+    assert tree.root.right.right.left.right == None

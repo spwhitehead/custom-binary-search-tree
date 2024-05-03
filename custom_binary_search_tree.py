@@ -11,8 +11,8 @@ class Node():
         self.right: Node = None
 
 class BST():
-    def __init__(self, root=None):
-        self.root = root
+    def __init__(self, root: Node=None):
+        self.root: Node = root
 
     def insert(self, value: int):
         """inserts a number into the tree"""
@@ -58,7 +58,6 @@ class BST():
                     return False
                 else: 
                     return self.search_recursive(value, current_node.right)
-
 
 
     def in_order_traversal(self, current_node: Node=None) -> list[int]:
@@ -111,27 +110,61 @@ class BST():
         return current_node.value 
 
 
-    def height(self) -> int:
+    def height(self, current_node: Node=None) -> int:
         """returns the depth of the tree(how far is the furthest node from the root node?)"""
-        pass
+        if current_node is None:
+            current_node = self.root
+        if self.root is None:
+            return 0
+        else:
+            lcount = 0
+            rcount = 0
+            if current_node.left != None:
+                lcount = self.height(current_node.left)
+                
+            if current_node.right != None:
+                rcount = self.height(current_node.right)
+
+        return max(lcount, rcount) + 1
+       
 
     def count_leaves(self, current_node: Node=None) -> int:
         """returns the number of leaf nodes in the tree(leaf nodes are nodes without any children)"""
+        if current_node is None:
+            current_node = self.root
+        if current_node is None:
+            return 0
+        if current_node.left is None and current_node.right is None:
+            return 1
+        else:
+            lcount = 0
+            rcount = 0
+            if current_node.left != None:
+                lcount = self.count_leaves(current_node.left)
+            if current_node.right != None:
+                rcount = self.count_leaves(current_node.right)
+        return lcount + rcount
+
+
+    def serialize(self, current_node: Node=None) -> str:
+        """turn the BST into a string that can be deserialized into the same tree"""
         if current_node == None:
             current_node = self.root
         if current_node == None:
-            return 0
-        
-        # ### copy in-order traversal code ###
-        leaf_count = 0
-        if current_node.left == None and current_node.right == None:
-            count += 1
-        
-        
-    def serialize(self) -> str:
-        """turn the BST into a string"""
-        pass
+            return ""
+        else:
+            serialized_list = []
+            serialized_list.append(str(current_node.value))
+            if current_node.left != None:
+                serialized_list.append(self.serialize(current_node.left))
+            if current_node.right != None:
+                serialized_list.append(self.serialize(current_node.right))
+            return "\xa0".join(serialized_list)
 
-    def deserialize(self, tree: str) -> None:
+    def deserialize(self, serialized_nums: str) -> None:
         """deserialize a serialized BST(take a string version of a BST and make an empty BST filled with those values). The new tree should match the tree that was serialized."""
-        pass
+        self.root = None
+        serialized_nums = serialized_nums.split("\xa0")
+        for value_str in serialized_nums:
+            value = int(value_str)
+            self.insert(value)
